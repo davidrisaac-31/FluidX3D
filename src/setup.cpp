@@ -295,6 +295,7 @@ void main_setup() {
     //   u[n]    = omega_vec × (p - c)    moving-wall velocity
     // both directly on device memory — no CPU transfers needed.
     lbm.voxelize_mesh_on_device(turbine, TURB_FLAG, turb_center, float3(0.0f), omega_vec);
+    lbm.update_moving_boundaries(); // mark fluid cells adjacent to moving solid with TYPE_MS
 
     print_info("Turbine voxelised on GPU  (flag = TYPE_S|TYPE_X)");
     print_info("Expected tip speed (lb) ~ " + to_string(omega_lb * D_lattice * 0.5f));
@@ -336,6 +337,7 @@ void main_setup() {
         lbm.unvoxelize_mesh_on_device(turbine, TURB_FLAG);
         turbine->rotate(float3x3(float3(1.0f, 0.0f, 0.0f), -delta_angle));  // CW from +x
         lbm.voxelize_mesh_on_device(turbine, TURB_FLAG, turb_center, float3(0.0f), omega_vec);
+        lbm.update_moving_boundaries(); // re-mark TYPE_MS cells after each rotation step
 
         // ----------------------------------------------------------
         //  8b.  Advance LBM
