@@ -1,6 +1,6 @@
 MAKEFLAGS = -j$(nproc)
 CC = g++
-CFLAGS = -std=c++17 -pthread -O -Wno-comment
+CFLAGS = -std=c++17 -pthread -O -Wno-comment -D GRAPHICS
 
 .PHONY: no-target
 no-target:

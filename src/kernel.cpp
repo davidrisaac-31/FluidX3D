@@ -1972,7 +1972,7 @@ string opencl_c_container() { return R( // ########################## begin of O
 	const uxx n = get_global_id(0); // n = x+(y+z*Ny)*Nx
 	const uint lid = get_local_id(0); // local memory reduction of cl_workgroup_size:1
 	local float3 cache[cl_workgroup_size];
-	cache[lid] = n<(uxx)def_N&&flags[n]==flag_marker ? cross(position(coordinates(n))-(float3)(cx, cy, cz), load3(n, F)) : (float3)(0.0f, 0.0f, 0.0f);
+	cache[lid] = n<(uxx)def_N&&(flags[n] & flag_marker)!=0 ? cross(position(coordinates(n))-(float3)(cx, cy, cz), load3(n, F)) : (float3)(0.0f, 0.0f, 0.0f);
 	barrier(CLK_GLOBAL_MEM_FENCE);
 	for(uint s=1u; s<cl_workgroup_size; s*=2u) {
 		if(lid%(2u*s)==0u) cache[lid] += cache[lid+s];
